@@ -14,7 +14,7 @@
         background-color: #000;
         color: #fff;
         scroll-behavior: smooth;
-        overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+        overflow-x: hidden;
       }
       h1, h2, h3, h4, h5, h6 {
         font-family: 'Playfair Display', serif;
@@ -22,7 +22,7 @@
       /* Custom Scrollbar */
       ::-webkit-scrollbar { width: 8px; }
       ::-webkit-scrollbar-track { background: #000; }
-      ::-webkit-scrollbar-thumb { background: #ea580c; border-radius: 4px; } /* Orange Thumb */
+      ::-webkit-scrollbar-thumb { background: #ea580c; border-radius: 4px; }
       ::-webkit-scrollbar-thumb:hover { background: #c2410c; }
       .scrollbar-hide::-webkit-scrollbar { display: none; }
       .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
@@ -52,10 +52,10 @@
             Menu, X, Phone, ArrowRight, MapPin, Mail, 
             Home, Armchair, Hammer, LayoutTemplate, Box, PenTool, 
             Star, Clock, Award, MessageSquare, Key, 
-            Instagram, Linkedin, Play, RotateCcw, Quote
+            Instagram, Linkedin, Play, RotateCcw, Quote, Shield, FileText
         } from 'lucide-react';
 
-        // --- Animation Variants (Reusable) ---
+        // --- Animations ---
         const fadeInUp = {
             hidden: { opacity: 0, y: 60 },
             visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
@@ -63,16 +63,60 @@
 
         const staggerContainer = {
             hidden: { opacity: 0 },
-            visible: {
-                opacity: 1,
-                transition: {
-                    staggerChildren: 0.2
-                }
-            }
+            visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
         };
 
         const MotionDiv = motion.div;
         const MotionImg = motion.img;
+
+        // --- Legal Content Data ---
+        const privacyPolicyText = (
+            <div className="space-y-4 text-sm text-gray-600">
+                <p><strong>Last Updated: November 2025</strong></p>
+                <p>At SB Interiors, we value your privacy. This policy explains how we handle your information.</p>
+                <h3 className="font-bold text-black mt-2">1. Information We Collect</h3>
+                <p>We collect personal information that you voluntarily provide to us when you fill out the contact form, including your Name, Phone Number, and Project Details.</p>
+                <h3 className="font-bold text-black mt-2">2. How We Use Your Information</h3>
+                <p>We use this information solely to contact you regarding your interior design inquiry and to schedule consultations. We do not sell or share your data with third parties.</p>
+                <h3 className="font-bold text-black mt-2">3. Contact Us</h3>
+                <p>If you have any questions, please contact us at sbinteriors159@gmail.com.</p>
+            </div>
+        );
+
+        const termsText = (
+            <div className="space-y-4 text-sm text-gray-600">
+                <p><strong>Last Updated: November 2025</strong></p>
+                <h3 className="font-bold text-black mt-2">1. Introduction</h3>
+                <p>Welcome to SB Interiors. By using this website, you agree to these terms.</p>
+                <h3 className="font-bold text-black mt-2">2. Services</h3>
+                <p>The images and portfolios displayed on this website are representations of our work. Actual project results may vary based on site conditions and budget.</p>
+                <h3 className="font-bold text-black mt-2">3. Intellectual Property</h3>
+                <p>All content on this website, including text and images, is the property of SB Interiors.</p>
+            </div>
+        );
+
+        // --- Legal Modal Component ---
+        const LegalModal = ({ isOpen, onClose, title, content }) => {
+            if (!isOpen) return null;
+            return (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        className="bg-white text-black p-6 md:p-8 rounded-sm max-w-lg w-full max-h-[80vh] overflow-y-auto relative shadow-2xl"
+                    >
+                        <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-black transition-colors">
+                            <X size={24} />
+                        </button>
+                        <h2 className="text-2xl font-serif font-bold mb-6 border-b pb-2">{title}</h2>
+                        <div className="overflow-y-auto pr-2 custom-scrollbar">
+                            {content}
+                        </div>
+                    </motion.div>
+                </div>
+            );
+        };
 
         // Navbar Component
         const Navbar = () => {
@@ -80,9 +124,7 @@
             const [scrolled, setScrolled] = useState(false);
 
             useEffect(() => {
-                const handleScroll = () => {
-                    setScrolled(window.scrollY > 20); // Trigger earlier on mobile
-                };
+                const handleScroll = () => { setScrolled(window.scrollY > 20); };
                 window.addEventListener('scroll', handleScroll);
                 return () => window.removeEventListener('scroll', handleScroll);
             }, []);
@@ -101,16 +143,12 @@
                     <div className="flex justify-between items-center h-16 md:h-20">
                     <div className="flex-shrink-0 flex items-center">
                         <a href="#" className="flex items-center gap-2">
-                        {/* Logo Image - Slightly larger on mobile now */}
                         <div className="relative h-10 md:h-12 flex items-center transition-all duration-300">
                              <img 
                                 src="sbinteriorlogo.png" 
                                 alt="SB INTERIORS" 
                                 className="h-full w-auto object-contain invert"
-                                onError={(e) => {
-                                    e.currentTarget.style.display = 'none';
-                                    e.currentTarget.nextSibling.style.display = 'block';
-                                }}
+                                onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextSibling.style.display = 'block'; }}
                             />
                             <span className="hidden text-xl md:text-2xl font-serif font-bold tracking-widest text-white whitespace-nowrap">
                                 SB INTERIORS
@@ -119,77 +157,40 @@
                         </a>
                     </div>
                     
-                    {/* Desktop Menu */}
                     <div className="hidden md:flex items-center space-x-8">
                         {navLinks.map((link) => (
-                        <a
-                            key={link.name}
-                            href={link.href}
-                            className="text-xs uppercase tracking-widest text-gray-300 hover:text-white transition-colors duration-200 relative group"
-                        >
+                        <a key={link.name} href={link.href} className="text-xs uppercase tracking-widest text-gray-300 hover:text-white transition-colors duration-200 relative group">
                             {link.name}
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-500 transition-all group-hover:w-full"></span>
                         </a>
                         ))}
-                        <a 
-                        href="tel:7207058862"
-                        className="flex items-center gap-2 bg-white text-black px-5 py-2 rounded-none hover:bg-orange-600 hover:text-white transition-colors text-xs font-bold tracking-wide uppercase"
-                        >
-                        <Phone size={14} />
-                        720-705-8862
+                        <a href="tel:7207058862" className="flex items-center gap-2 bg-white text-black px-5 py-2 rounded-none hover:bg-orange-600 hover:text-white transition-colors text-xs font-bold tracking-wide uppercase">
+                        <Phone size={14} /> 720-705-8862
                         </a>
                     </div>
 
-                    {/* Mobile Menu Button */}
                     <div className="md:hidden flex items-center">
-                        <button
-                        onClick={() => setIsOpen(!isOpen)}
-                        className="text-white hover:text-orange-500 focus:outline-none p-2"
-                        >
+                        <button onClick={() => setIsOpen(!isOpen)} className="text-white hover:text-orange-500 focus:outline-none p-2">
                         {isOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
                     </div>
                     </div>
                 </div>
 
-                {/* Mobile Menu Dropdown with Animation */}
                 <AnimatePresence>
                     {isOpen && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.3 }}
-                            className="md:hidden bg-black/95 border-t border-white/10 absolute w-full backdrop-blur-md overflow-hidden"
-                        >
+                        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }} className="md:hidden bg-black/95 border-t border-white/10 absolute w-full backdrop-blur-md overflow-hidden">
                         <div className="px-4 pt-4 pb-6 space-y-4">
                             {navLinks.map((link, index) => (
-                            <motion.a
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: index * 0.1 }}
-                                key={link.name}
-                                href={link.href}
-                                onClick={() => setIsOpen(false)}
-                                className="block px-3 py-2 text-lg font-medium text-gray-300 hover:text-orange-500 hover:bg-white/5 uppercase tracking-widest border-l-2 border-transparent hover:border-orange-500 transition-all"
-                            >
+                            <motion.a initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.1 }} key={link.name} href={link.href} onClick={() => setIsOpen(false)} className="block px-3 py-2 text-lg font-medium text-gray-300 hover:text-orange-500 hover:bg-white/5 uppercase tracking-widest border-l-2 border-transparent hover:border-orange-500 transition-all">
                                 {link.name}
                             </motion.a>
                             ))}
-                            <motion.div 
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.5 }}
-                                className="pt-4"
-                            >
-                                <a 
-                                href="tel:7207058862"
-                                className="flex items-center justify-center gap-2 bg-orange-600 text-white px-4 py-4 w-full font-bold uppercase tracking-widest hover:bg-orange-700 transition-colors"
-                                >
-                                <Phone size={18} />
-                                Call Us
+                            <div className="pt-4">
+                                <a href="tel:7207058862" className="flex items-center justify-center gap-2 bg-orange-600 text-white px-4 py-4 w-full font-bold uppercase tracking-widest hover:bg-orange-700 transition-colors">
+                                <Phone size={18} /> Call Us
                                 </a>
-                            </motion.div>
+                            </div>
                         </div>
                         </motion.div>
                     )}
@@ -198,55 +199,23 @@
             );
         };
 
-        // Hero Component - Improved Mobile Layout & Animation
         const Hero = () => {
             return (
                 <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden bg-black text-white">
-                {/* Background Image with smoother scale animation */}
                 <div className="absolute inset-0 z-0 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black z-10"></div>
-                    <MotionImg 
-                    initial={{ scale: 1.1 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 10, ease: "easeOut" }}
-                    src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?q=80&w=1920&auto=format&fit=crop" 
-                    alt="Luxury Interior Background" 
-                    className="w-full h-full object-cover opacity-50 grayscale"
-                    />
+                    <MotionImg initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 10, ease: "easeOut" }} src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?q=80&w=1920&auto=format&fit=crop" alt="Luxury Interior" className="w-full h-full object-cover opacity-50 grayscale" />
                 </div>
-
                 <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col justify-center h-full pt-20">
-                    <MotionDiv
-                        variants={staggerContainer}
-                        initial="hidden"
-                        animate="visible"
-                        className="space-y-6 md:space-y-8"
-                    >
-                        <motion.h2 variants={fadeInUp} className="text-xs md:text-sm tracking-[0.3em] md:tracking-[0.4em] uppercase text-orange-500 font-bold">
-                            Premium Interior Design Firm
-                        </motion.h2>
-                        <motion.h1 variants={fadeInUp} className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter font-serif text-white leading-tight">
-                            SB INTERIORS
-                        </motion.h1>
+                    <MotionDiv variants={staggerContainer} initial="hidden" animate="visible" className="space-y-6 md:space-y-8">
+                        <motion.h2 variants={fadeInUp} className="text-xs md:text-sm tracking-[0.3em] uppercase text-orange-500 font-bold">Premium Interior Design Firm</motion.h2>
+                        <motion.h1 variants={fadeInUp} className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter font-serif text-white leading-tight">SB INTERIORS</motion.h1>
                         <motion.div variants={fadeInUp} className="max-w-3xl mx-auto">
-                            <p className="text-base md:text-2xl font-light italic text-gray-300 py-6 border-t border-b border-white/10 px-4">
-                                "Transforming Badangepet's Homes into Luxurious Sanctuaries"
-                            </p>
+                            <p className="text-base md:text-2xl font-light italic text-gray-300 py-6 border-t border-b border-white/10 px-4">"Transforming Badangepet's Homes into Luxurious Sanctuaries"</p>
                         </motion.div>
-                        
                         <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-                            <a 
-                            href="#contact" 
-                            className="w-full sm:w-auto px-8 md:px-10 py-4 bg-white text-black text-xs uppercase tracking-widest font-bold hover:bg-orange-600 hover:text-white transition-all flex items-center justify-center gap-2 group"
-                            >
-                            Get Free Consultation <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                            </a>
-                            <a 
-                            href="#portfolio" 
-                            className="w-full sm:w-auto px-8 md:px-10 py-4 border border-white text-white text-xs uppercase tracking-widest font-bold hover:bg-white hover:text-black transition-all"
-                            >
-                            View Projects
-                            </a>
+                            <a href="#contact" className="w-full sm:w-auto px-8 md:px-10 py-4 bg-white text-black text-xs uppercase tracking-widest font-bold hover:bg-orange-600 hover:text-white transition-all flex items-center justify-center gap-2 group">Get Free Consultation <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" /></a>
+                            <a href="#portfolio" className="w-full sm:w-auto px-8 md:px-10 py-4 border border-white text-white text-xs uppercase tracking-widest font-bold hover:bg-white hover:text-black transition-all">View Projects</a>
                         </motion.div>
                     </MotionDiv>
                 </div>
@@ -254,7 +223,6 @@
             );
         };
 
-        // Services Component - Added scroll animations
         const Services = () => {
             const services = [
                 { icon: Home, title: "Full Home Interiors", description: "Complete turnkey solutions from design to handover." },
@@ -264,35 +232,17 @@
                 { icon: PenTool, title: "3D Design", description: "Premium 3D rendering before we start work." },
                 { icon: Armchair, title: "Furniture & Decor", description: "Custom furniture manufacturing and styling." }
             ];
-
             return (
                 <section id="services" className="py-20 md:py-24 bg-white text-black">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <MotionDiv 
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.2 }}
-                        variants={fadeInUp}
-                        className="text-center mb-12 md:mb-16"
-                    >
+                    <MotionDiv initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="text-center mb-12 md:mb-16">
                         <span className="text-orange-600 font-bold text-xs tracking-widest uppercase block mb-3">What We Do</span>
                         <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4">Our Expertise</h2>
                         <div className="w-16 md:w-20 h-1 bg-black mx-auto"></div>
                     </MotionDiv>
-
-                    <MotionDiv 
-                        variants={staggerContainer}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.1 }}
-                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
-                    >
+                    <MotionDiv variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                     {services.map((service, index) => (
-                        <MotionDiv
-                        variants={fadeInUp}
-                        key={index}
-                        className="group p-8 md:p-10 border border-gray-100 hover:border-orange-500/20 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 bg-white"
-                        >
+                        <MotionDiv variants={fadeInUp} key={index} className="group p-8 md:p-10 border border-gray-100 hover:border-orange-500/20 transition-all duration-500 hover:shadow-2xl hover:-translate-y-1 bg-white">
                         <div className="mb-6 bg-orange-50 w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-full group-hover:bg-orange-600 group-hover:text-white transition-colors duration-500 text-orange-600">
                             <service.icon strokeWidth={1.5} size={28} className="md:w-8 md:h-8" />
                         </div>
@@ -306,7 +256,6 @@
             );
         };
 
-        // Portfolio Component - Improved Mobile Layout
         const Portfolio = () => {
              const projects = [
                 { id: 1, category: 'Residential', title: 'Luxury Villa', src: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800' },
@@ -316,7 +265,6 @@
                 { id: 5, category: 'Residential', title: 'Master Bedroom', src: 'https://images.unsplash.com/photo-1617325247661-675ab4b64ae2?q=80&w=800&auto=format&fit=crop' },
                 { id: 6, category: 'Kitchen', title: 'Island Setup', src: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&q=80&w=800' },
             ];
-            
             const [filter, setFilter] = useState('All');
             const categories = ['All', 'Residential', 'Kitchen', 'Commercial'];
             const filteredProjects = filter === 'All' ? projects : projects.filter(p => p.category === filter);
@@ -324,53 +272,26 @@
             return (
                 <section id="portfolio" className="py-20 md:py-24 bg-neutral-950 text-white relative overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <MotionDiv 
-                        initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
-                        className="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-800 pb-8 gap-6"
-                    >
+                    <MotionDiv initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-800 pb-8 gap-6">
                         <div className="w-full md:w-auto text-center md:text-left">
                             <span className="text-orange-500 font-bold text-xs tracking-widest uppercase block mb-2">Our Work</span>
                             <h2 className="text-3xl md:text-5xl font-serif font-bold mb-2">Selected Projects</h2>
                         </div>
-                        
                         <div className="w-full md:w-auto overflow-x-auto pb-2 scrollbar-hide">
                             <div className="flex gap-3 md:gap-4 justify-center md:justify-end min-w-max px-2">
                             {categories.map(cat => (
-                                <button
-                                key={cat}
-                                onClick={() => setFilter(cat)}
-                                className={`text-xs md:text-sm uppercase tracking-widest px-4 py-2 transition-all whitespace-nowrap border rounded-sm ${
-                                    filter === cat ? 'bg-orange-600 text-white border-orange-600 shadow-lg shadow-orange-900/50' : 'border-gray-800 text-gray-500 hover:border-orange-500 hover:text-white'
-                                }`}
-                                >
+                                <button key={cat} onClick={() => setFilter(cat)} className={`text-xs md:text-sm uppercase tracking-widest px-4 py-2 transition-all whitespace-nowrap border rounded-sm ${filter === cat ? 'bg-orange-600 text-white border-orange-600 shadow-lg shadow-orange-900/50' : 'border-gray-800 text-gray-500 hover:border-orange-500 hover:text-white'}`}>
                                 {cat}
                                 </button>
                             ))}
                             </div>
                         </div>
                     </MotionDiv>
-
-                    <motion.div 
-                        layout
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-                    >
+                    <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         <AnimatePresence>
                         {filteredProjects.map((project, index) => (
-                            <motion.div 
-                            layout
-                            initial={{ opacity: 0, y: 50 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
-                            key={project.id}
-                            className="group relative aspect-[4/5] md:aspect-square overflow-hidden cursor-pointer bg-neutral-900 rounded-sm"
-                            >
-                            <img 
-                                src={project.src} 
-                                alt={project.title}
-                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 ease-out"
-                            />
-                            {/* Mobile: Gradient Overlay, Desktop: Hover Overlay */}
+                            <motion.div layout initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9 }} transition={{ duration: 0.5, delay: index * 0.1 }} key={project.id} className="group relative aspect-[4/5] md:aspect-square overflow-hidden cursor-pointer bg-neutral-900 rounded-sm">
+                            <img src={project.src} alt={project.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 ease-out" />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent md:bg-black/60 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end md:justify-center p-6 md:p-4">
                                 <span className="text-orange-500 text-xs font-bold uppercase tracking-widest mb-2 transform md:translate-y-4 group-hover:translate-y-0 transition-transform">{project.category}</span>
                                 <h3 className="text-xl md:text-2xl font-serif text-white transform md:translate-y-4 group-hover:translate-y-0 transition-transform delay-75">{project.title}</h3>
@@ -379,43 +300,22 @@
                         ))}
                         </AnimatePresence>
                     </motion.div>
-
-                    {/* Featured Case Study - Stacked on mobile */}
-                    <MotionDiv 
-                        initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
-                        className="mt-20 md:mt-24 bg-neutral-900 p-0 md:p-0 overflow-hidden border border-white/10 rounded-sm"
-                    >
+                    <MotionDiv initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="mt-20 md:mt-24 bg-neutral-900 p-0 md:p-0 overflow-hidden border border-white/10 rounded-sm">
                     <div className="grid md:grid-cols-2">
-                        {/* Video on top for mobile */}
                         <div className="relative h-64 sm:h-80 md:h-auto min-h-[300px] md:min-h-[450px] overflow-hidden group order-1 md:order-2">
-                            <video 
-                                src="casestudy.mp4" 
-                                autoPlay loop muted playsInline
-                                className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700 scale-105 grayscale group-hover:grayscale-0"
-                            />
+                            <video src="casestudy.mp4" autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700 scale-105 grayscale group-hover:grayscale-0" />
                             <div className="absolute inset-0 bg-black/30 pointer-events-none"></div>
                             <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 bg-white text-black px-3 py-1.5 md:px-4 md:py-2 text-xs font-bold uppercase tracking-widest rounded-sm flex items-center gap-2">
                                 <Play size={12} fill="currentColor" /> Live Walkthrough
                             </div>
                         </div>
-
                         <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center order-2 md:order-1">
                             <span className="text-xs font-bold text-orange-500 uppercase tracking-widest mb-4 block">Featured Case Study</span>
                             <h3 className="text-2xl md:text-4xl font-serif text-white mb-6">Badangepet Luxury Residence</h3>
                             <div className="space-y-6 md:space-y-8 text-gray-400 font-light text-sm md:text-base">
-                                <div>
-                                <h4 className="text-white font-bold uppercase text-xs tracking-widest mb-2">The Challenge</h4>
-                                <p>Converting a compact 1200 sqft apartment into a spacious-feeling modern home with ample storage.</p>
-                                </div>
-                                <div>
-                                <h4 className="text-white font-bold uppercase text-xs tracking-widest mb-2">The Solution</h4>
-                                <p>We used hidden storage, reflective surfaces, and a minimal color palette with Italian marble to create a sense of grandeur.</p>
-                                </div>
-                                <div className="pt-4">
-                                    <a href="#contact" className="group inline-flex items-center gap-2 border-b border-orange-500 text-orange-500 pb-1 hover:text-white hover:border-white transition-colors uppercase text-xs tracking-widest font-bold">
-                                        Request similar design <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform"/>
-                                    </a>
-                                </div>
+                                <div><h4 className="text-white font-bold uppercase text-xs tracking-widest mb-2">The Challenge</h4><p>Converting a compact 1200 sqft apartment into a spacious-feeling modern home with ample storage.</p></div>
+                                <div><h4 className="text-white font-bold uppercase text-xs tracking-widest mb-2">The Solution</h4><p>We used hidden storage, reflective surfaces, and a minimal color palette with Italian marble to create a sense of grandeur.</p></div>
+                                <div className="pt-4"><a href="#contact" className="group inline-flex items-center gap-2 border-b border-orange-500 text-orange-500 pb-1 hover:text-white hover:border-white transition-colors uppercase text-xs tracking-widest font-bold">Request similar design <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform"/></a></div>
                             </div>
                         </div>
                     </div>
@@ -425,78 +325,37 @@
             );
         };
 
-        // Founders Component - Fixed Mobile Alignment & Added Animation
         const Founders = () => {
             return (
                 <section id="founders" className="py-20 md:py-24 bg-white text-black">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <MotionDiv 
-                        initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
-                        className="text-center mb-12 md:mb-16"
-                    >
+                    <MotionDiv initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="text-center mb-12 md:mb-16">
                         <span className="text-orange-600 font-bold text-xs tracking-widest uppercase block mb-3">Leadership</span>
                         <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4">Meet The Founders</h2>
                         <div className="w-16 md:w-20 h-1 bg-black mx-auto mb-6"></div>
-                        <p className="text-gray-600 font-light max-w-2xl mx-auto text-sm md:text-base px-4">
-                            The creative and technical minds behind SBINTERIORS, dedicated to excellence.
-                        </p>
+                        <p className="text-gray-600 font-light max-w-2xl mx-auto text-sm md:text-base px-4">The creative and technical minds behind SBINTERIORS, dedicated to excellence.</p>
                     </MotionDiv>
-
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 max-w-4xl mx-auto items-start">
-                    {/* Founder 1 */}
-                    <MotionDiv 
-                        initial={{ opacity: 0, x: -50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                        viewport={{ once: true }}
-                        className="group flex flex-col h-full items-center md:items-start text-center md:text-left"
-                    >
-                        {/* Image Container - Centered on mobile, fixed aspect ratio */}
+                    <MotionDiv initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut" }} viewport={{ once: true }} className="group flex flex-col h-full items-center md:items-start text-center md:text-left">
                         <div className="w-full max-w-sm aspect-[4/5] mb-8 overflow-hidden relative bg-gray-100 rounded-sm shadow-lg mx-auto md:mx-0">
-                        <img
-                            src="girlfounder.png"
-                            alt="S. Bhargavi Reddy"
-                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-all duration-1000 grayscale group-hover:grayscale-0"
-                        />
-                         <div className="absolute bottom-0 left-0 bg-black/90 backdrop-blur-sm text-white p-4 w-full translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out">
-                             <p className="text-xs italic">"Design is not just what it looks like, but how it works."</p>
-                         </div>
+                        <img src="girlfounder.png" alt="S. Bhargavi Reddy" className="w-full h-full object-cover object-top group-hover:scale-105 transition-all duration-1000 grayscale group-hover:grayscale-0" />
+                         <div className="absolute bottom-0 left-0 bg-black/90 backdrop-blur-sm text-white p-4 w-full translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out"><p className="text-xs italic">"Design is not just what it looks like, but how it works."</p></div>
                         </div>
-                        
                         <div className="flex-grow px-4 md:px-0">
                         <h3 className="text-2xl font-serif font-bold mb-2">S. Bhargavi Reddy</h3>
                         <p className="text-xs uppercase tracking-widest text-orange-600 font-bold mb-4">Co-Founder & Creative Head</p>
-                        <p className="text-gray-600 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
-                            Expert in spatial planning and aesthetics with 5+ years of experience in luxury residential projects.
-                        </p>
+                        <p className="text-gray-600 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">Expert in spatial planning and aesthetics with 5+ years of experience in luxury residential projects.</p>
                         </div>
                     </MotionDiv>
-
-                    {/* Founder 2 */}
-                    <MotionDiv 
-                        initial={{ opacity: 0, x: 50 }} // Slide from right
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }} // Slight delay on desktop
-                        viewport={{ once: true }}
-                        className="group flex flex-col h-full items-center md:items-start text-center md:text-left"
-                    >
+                    <MotionDiv initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }} viewport={{ once: true }} className="group flex flex-col h-full items-center md:items-start text-center md:text-left">
                         <div className="w-full max-w-sm aspect-[4/5] mb-8 overflow-hidden relative bg-gray-100 rounded-sm shadow-lg mx-auto md:mx-0">
-                        <img
-                            src="boyfounder.jpg"
-                            alt="B. Rajesh"
-                            className="w-full h-full object-cover object-top group-hover:scale-105 transition-all duration-1000 grayscale group-hover:grayscale-0"
-                        />
-                        <div className="absolute bottom-0 left-0 bg-black/90 backdrop-blur-sm text-white p-4 w-full translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out">
-                             <p className="text-xs italic">"Execution is the key to bringing dreams to reality."</p>
-                         </div>
+                        <img src="boyfounder.jpg" alt="B. Rajesh" className="w-full h-full object-cover object-top group-hover:scale-105 transition-all duration-1000 grayscale group-hover:grayscale-0" />
+                        <div className="absolute bottom-0 left-0 bg-black/90 backdrop-blur-sm text-white p-4 w-full translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out"><p className="text-xs italic">"Execution is the key to bringing dreams to reality."</p></div>
                         </div>
-
                         <div className="flex-grow px-4 md:px-0">
                         <h3 className="text-2xl font-serif font-bold mb-2">B. Rajesh</h3>
                         <p className="text-xs uppercase tracking-widest text-orange-600 font-bold mb-4">Co-Founder & Project Lead</p>
-                        <p className="text-gray-600 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
-                            Specializes in on-site execution, material sourcing, and ensuring timely delivery of all projects.
-                        </p>
+                        <p className="text-gray-600 text-sm leading-relaxed max-w-xs mx-auto md:mx-0">Specializes in on-site execution, material sourcing, and ensuring timely delivery of all projects.</p>
                         </div>
                     </MotionDiv>
                     </div>
@@ -505,44 +364,26 @@
             );
         };
 
-        // Testimonials - Added Animations
         const Testimonials = () => {
             const testimonials = [
                 { id: 1, name: "Anitha Rao", location: "Badangepet", quote: "SBInteriors transformed our 3BHK into a dream home. The attention to detail in the kitchen and woodwork is flawless.", rating: 5 },
                 { id: 2, name: "Vikram Reddy", location: "Gachibowli", quote: "Rajesh and his team were excellent. Delivered on time and budget. The finish is exactly as promised in the 3D designs.", rating: 5 },
                 { id: 3, name: "Meera & Suresh", location: "Jubilee Hills", quote: "Bhargavi's design sense is impeccable. She understood our need for a minimalist yet luxurious space perfectly.", rating: 5 }
             ];
-
             return (
                 <section id="testimonials" className="py-20 md:py-24 bg-neutral-950 text-white border-t border-neutral-900">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <MotionDiv 
-                            initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp}
-                            className="text-center mb-12 md:mb-16"
-                        >
+                        <MotionDiv initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="text-center mb-12 md:mb-16">
                             <span className="text-orange-600 font-bold text-xs tracking-widest uppercase block mb-3">Testimonials</span>
                             <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4">Client Stories</h2>
                             <div className="w-16 md:w-20 h-1 bg-white mx-auto"></div>
                         </MotionDiv>
-
-                        <MotionDiv 
-                            variants={staggerContainer}
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={{ once: true }}
-                            className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8"
-                        >
+                        <MotionDiv variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                             {testimonials.map((item, index) => (
-                                <MotionDiv
-                                    variants={fadeInUp}
-                                    key={item.id}
-                                    className="bg-black p-8 border border-white/10 relative group hover:border-orange-500/50 transition-all duration-300 rounded-sm hover:-translate-y-1"
-                                >
+                                <MotionDiv variants={fadeInUp} key={item.id} className="bg-black p-8 border border-white/10 relative group hover:border-orange-500/50 transition-all duration-300 rounded-sm hover:-translate-y-1">
                                     <Quote size={40} className="text-neutral-800 absolute top-6 right-6 group-hover:text-orange-600/20 transition-colors" />
                                     <div className="flex gap-1 mb-6">
-                                        {[...Array(item.rating)].map((_, i) => (
-                                            <Star key={i} size={16} fill="#ea580c" className="text-orange-600" />
-                                        ))}
+                                        {[...Array(item.rating)].map((_, i) => (<Star key={i} size={16} fill="#ea580c" className="text-orange-600" />))}
                                     </div>
                                     <p className="text-gray-300 font-light italic mb-8 leading-relaxed text-sm md:text-base">"{item.quote}"</p>
                                     <div>
@@ -557,9 +398,10 @@
             );
         };
 
-        // Contact Component - Improved Mobile Inputs & Animation
+        // Contact Component - Updated with Legal Modals & New Footer
         const Contact = () => {
-            const [result, setResult] = React.useState("");
+            const [result, setResult] = useState("");
+            const [activeModal, setActiveModal] = useState(null); // 'privacy' | 'terms' | null
 
             const onSubmit = async (event) => {
                 event.preventDefault();
@@ -571,9 +413,7 @@
                     method: "POST",
                     body: formData
                 });
-
                 const data = await response.json();
-
                 if (data.success) {
                     setResult("Message Sent Successfully! We will contact you soon.");
                     event.target.reset();
@@ -589,100 +429,48 @@
                     
                     <div className="grid lg:grid-cols-2 gap-12 md:gap-16 mb-16 md:mb-24">
                     {/* Contact Info */}
-                    <MotionDiv 
-                        initial={{ opacity: 0, x: -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                    >
+                    <MotionDiv initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
                         <h2 className="text-4xl md:text-6xl font-serif font-bold mb-6 md:mb-8 leading-tight">Start Your Journey</h2>
-                        <p className="text-gray-400 font-light mb-10 md:mb-12 text-base md:text-lg max-w-md">
-                        Ready to transform your space? Get in touch for a free consultation and site visit in Hyderabad.
-                        </p>
-
+                        <p className="text-gray-400 font-light mb-10 md:mb-12 text-base md:text-lg max-w-md">Ready to transform your space? Get in touch for a free consultation and site visit in Hyderabad.</p>
                         <div className="space-y-6 md:space-y-8">
                             <div className="flex items-start gap-5 group">
-                                <div className="p-3 md:p-4 border border-white/30 text-orange-500 group-hover:bg-orange-600 group-hover:text-white transition-all rounded-sm">
-                                    <Phone size={20} className="md:w-6 md:h-6" />
-                                </div>
-                                <div>
-                                    <h4 className="text-xs font-bold uppercase tracking-widest mb-1 text-gray-500">Call Us</h4>
-                                    <p className="text-lg md:text-2xl font-serif group-hover:text-orange-500 transition-colors">7207058862</p>
-                                </div>
+                                <div className="p-3 md:p-4 border border-white/30 text-orange-500 group-hover:bg-orange-600 group-hover:text-white transition-all rounded-sm"><Phone size={20} className="md:w-6 md:h-6" /></div>
+                                <div><h4 className="text-xs font-bold uppercase tracking-widest mb-1 text-gray-500">Call Us</h4><p className="text-lg md:text-2xl font-serif group-hover:text-orange-500 transition-colors">7207058862</p></div>
                             </div>
                              <div className="flex items-start gap-5 group">
-                                <div className="p-3 md:p-4 border border-white/30 text-orange-500 group-hover:bg-orange-600 group-hover:text-white transition-all rounded-sm">
-                                    <Mail size={20} className="md:w-6 md:h-6" />
-                                </div>
-                                <div>
-                                    <h4 className="text-xs font-bold uppercase tracking-widest mb-1 text-gray-500">Email Us</h4>
-                                    <p className="text-lg md:text-2xl font-serif break-all group-hover:text-orange-500 transition-colors">sbinteriors159@gmail.com</p>
-                                </div>
+                                <div className="p-3 md:p-4 border border-white/30 text-orange-500 group-hover:bg-orange-600 group-hover:text-white transition-all rounded-sm"><Mail size={20} className="md:w-6 md:h-6" /></div>
+                                <div><h4 className="text-xs font-bold uppercase tracking-widest mb-1 text-gray-500">Email Us</h4><p className="text-lg md:text-2xl font-serif break-all group-hover:text-orange-500 transition-colors">sbinteriors159@gmail.com</p></div>
                             </div>
                              <div className="flex items-start gap-5 group">
-                                <div className="p-3 md:p-4 border border-white/30 text-orange-500 group-hover:bg-orange-600 group-hover:text-white transition-all rounded-sm">
-                                    <MapPin size={20} className="md:w-6 md:h-6" />
-                                </div>
-                                <div>
-                                    <h4 className="text-xs font-bold uppercase tracking-widest mb-1 text-gray-500">Visit Us</h4>
-                                    <p className="text-base md:text-lg group-hover:text-orange-500 transition-colors">Badangepet, Hyderabad, Telangana</p>
-                                </div>
+                                <div className="p-3 md:p-4 border border-white/30 text-orange-500 group-hover:bg-orange-600 group-hover:text-white transition-all rounded-sm"><MapPin size={20} className="md:w-6 md:h-6" /></div>
+                                <div><h4 className="text-xs font-bold uppercase tracking-widest mb-1 text-gray-500">Visit Us</h4><p className="text-base md:text-lg group-hover:text-orange-500 transition-colors">Badangepet, Hyderabad, Telangana</p></div>
                             </div>
                         </div>
                     </MotionDiv>
 
-                    {/* Form - Better Mobile Padding */}
-                    <MotionDiv 
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="bg-neutral-900 p-6 md:p-12 border-t-4 border-orange-600 rounded-sm shadow-xl"
-                    >
+                    {/* Form */}
+                    <MotionDiv initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8, delay: 0.2 }} className="bg-neutral-900 p-6 md:p-12 border-t-4 border-orange-600 rounded-sm shadow-xl">
                         <form onSubmit={onSubmit} className="space-y-5 md:space-y-6">
                             <input type="hidden" name="subject" value="New Lead from SB Interiors Website" />
                             <input type="hidden" name="from_name" value="SB Interiors Website" />
-
                             <div className="grid md:grid-cols-2 gap-5 md:gap-6">
-                                <div>
-                                <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Name *</label>
-                                <input type="text" name="name" required className="w-full bg-black border border-white/20 p-3 md:p-4 focus:border-orange-500 outline-none transition-colors text-white placeholder-gray-700 rounded-sm" placeholder="John Doe" />
-                                </div>
-                                <div>
-                                <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Phone *</label>
-                                <input type="tel" name="phone" required className="w-full bg-black border border-white/20 p-3 md:p-4 focus:border-orange-500 outline-none transition-colors text-white placeholder-gray-700 rounded-sm" placeholder="+91 98765 43210" />
-                                </div>
+                                <div><label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Name *</label><input type="text" name="name" required className="w-full bg-black border border-white/20 p-3 md:p-4 focus:border-orange-500 outline-none transition-colors text-white placeholder-gray-700 rounded-sm" placeholder="John Doe" /></div>
+                                <div><label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Phone *</label><input type="tel" name="phone" required className="w-full bg-black border border-white/20 p-3 md:p-4 focus:border-orange-500 outline-none transition-colors text-white placeholder-gray-700 rounded-sm" placeholder="+91 98765 43210" /></div>
                             </div>
+                            <div><label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Project Type</label><select name="project_type" className="w-full bg-black border border-white/20 p-3 md:p-4 focus:border-orange-500 outline-none transition-colors text-white appearance-none rounded-sm"><option>Full Home Interior</option><option>Modular Kitchen</option><option>Commercial Renovation</option><option>Other</option></select></div>
+                            <div><label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Message *</label><textarea name="message" required rows={4} className="w-full bg-black border border-white/20 p-3 md:p-4 focus:border-orange-500 outline-none transition-colors text-white placeholder-gray-700 rounded-sm" placeholder="Tell us about your requirements..."></textarea></div>
+                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" className="w-full bg-white text-black font-bold uppercase tracking-widest py-4 hover:bg-orange-600 hover:text-white transition-colors rounded-sm flex items-center justify-center gap-2 group">Get Free Quote <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" /></motion.button>
+                            {result && (<motion.div initial={{opacity:0}} animate={{opacity:1}} className={`text-center text-sm font-bold mt-4 p-3 rounded-sm ${result.includes("Success") ? "text-green-400 border border-green-500/20 bg-green-500/10" : "text-red-400 border border-red-500/20 bg-red-500/10"}`}>{result}</motion.div>)}
                             
-                            <div>
-                                <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Project Type</label>
-                                <select name="project_type" className="w-full bg-black border border-white/20 p-3 md:p-4 focus:border-orange-500 outline-none transition-colors text-white appearance-none rounded-sm">
-                                <option>Full Home Interior</option>
-                                <option>Modular Kitchen</option>
-                                <option>Commercial Renovation</option>
-                                <option>Other</option>
-                                </select>
+                            {/* Legal Links Trigger */}
+                            <div className="text-center pt-2">
+                                <p className="text-[10px] text-gray-600">
+                                    By submitting this form, you agree to our{' '}
+                                    <button type="button" onClick={() => setActiveModal('privacy')} className="underline hover:text-white">Privacy Policy</button>
+                                    {' '}and{' '}
+                                    <button type="button" onClick={() => setActiveModal('terms')} className="underline hover:text-white">Terms</button>.
+                                </p>
                             </div>
-
-                            <div>
-                                <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Message *</label>
-                                <textarea name="message" required rows={4} className="w-full bg-black border border-white/20 p-3 md:p-4 focus:border-orange-500 outline-none transition-colors text-white placeholder-gray-700 rounded-sm" placeholder="Tell us about your requirements..."></textarea>
-                            </div>
-
-                            <motion.button 
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                type="submit" 
-                                className="w-full bg-white text-black font-bold uppercase tracking-widest py-4 hover:bg-orange-600 hover:text-white transition-colors rounded-sm flex items-center justify-center gap-2 group"
-                            >
-                                Get Free Quote <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                            </motion.button>
-
-                            {result && (
-                                <motion.div initial={{opacity:0}} animate={{opacity:1}} className={`text-center text-sm font-bold mt-4 p-3 rounded-sm ${result.includes("Success") ? "text-green-400 border border-green-500/20 bg-green-500/10" : "text-red-400 border border-red-500/20 bg-red-500/10"}`}>
-                                    {result}
-                                </motion.div>
-                            )}
                         </form>
                     </MotionDiv>
                     </div>
@@ -691,30 +479,51 @@
                     <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500 gap-4 md:gap-0">
                     <div className="flex flex-col items-center md:items-start">
                         <span className="text-xl font-serif font-bold text-white mb-2">SB INTERIORS</span>
-                        <p>&copy; {new Date().getFullYear()} SB INTERIORS. All rights reserved.</p>
+                        <div className="flex gap-4 text-xs">
+                             <button onClick={() => setActiveModal('privacy')} className="hover:text-white transition-colors">Privacy Policy</button>
+                             <button onClick={() => setActiveModal('terms')} className="hover:text-white transition-colors">Terms of Service</button>
+                        </div>
+                        <p className="mt-2 text-xs opacity-60">&copy; {new Date().getFullYear()} SB INTERIORS. All rights reserved.</p>
                     </div>
+                    {/* SB Interiors Socials - Update links here */}
                     <div className="flex gap-6">
-                        <a href="#" className="hover:text-orange-500 transition-colors flex items-center gap-2"><Instagram size={16}/> Instagram</a>
+                        <a href="https://instagram.com/sbinteriors" target="_blank" className="hover:text-orange-500 transition-colors flex items-center gap-2"><Instagram size={16}/> Instagram</a>
                         <a href="#" className="hover:text-orange-500 transition-colors flex items-center gap-2"><Linkedin size={16}/> LinkedIn</a>
                     </div>
                     </div>
 
-                    {/* Brand Spark Credit Section */}
+                    {/* Brand Spark Credit Section with Social Icons */}
                     <div className="border-t border-white/5 mt-8 pt-6 pb-4 flex flex-col items-center justify-center gap-3">
-                        <p className="text-[10px] text-gray-600 tracking-[0.2em] uppercase font-medium text-center">
-                            DESIGNED & DEVELOPED BY <span className="text-orange-500 font-bold">BRAND SPARK</span>
-                        </p>
-                        <a href="tel:7380311858" className="text-xs text-gray-500 hover:text-orange-500 transition-colors flex items-center gap-1">
-                            <Phone size={12} /> +91 73803 11858
-                        </a>
+                        <div className="flex items-center gap-3">
+                            <p className="text-[10px] text-gray-600 tracking-[0.2em] uppercase font-medium text-center">
+                                DESIGNED & DEVELOPED BY <span className="text-orange-500 font-bold">BRAND SPARK</span>
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-4 text-xs text-gray-500">
+                             <a href="tel:7380311858" className="hover:text-orange-500 transition-colors flex items-center gap-1">
+                                <Phone size={12} /> +91 73803 11858
+                            </a>
+                            {/* Brand Spark Socials (Small) */}
+                            <a href="#" aria-label="Brand Spark Instagram" className="hover:text-orange-500 transition-colors">
+                                <Instagram size={12} />
+                            </a>
+                            <a href="#" aria-label="Brand Spark LinkedIn" className="hover:text-orange-500 transition-colors">
+                                <Linkedin size={12} />
+                            </a>
+                        </div>
                     </div>
+
+                    {/* Legal Modals */}
+                    <AnimatePresence>
+                        {activeModal === 'privacy' && <LegalModal isOpen={true} onClose={() => setActiveModal(null)} title="Privacy Policy" content={privacyPolicyText} />}
+                        {activeModal === 'terms' && <LegalModal isOpen={true} onClose={() => setActiveModal(null)} title="Terms & Conditions" content={termsText} />}
+                    </AnimatePresence>
 
                 </div>
                 </section>
             );
         };
 
-        // App Component
         const App = () => {
             return (
                 <div className="min-h-screen bg-black overflow-x-hidden">
