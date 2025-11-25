@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SBINTERIORS | Transforming Spaces</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #000;
+        color: #fff;
+        scroll-behavior: smooth;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Playfair Display', serif;
+      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #000; }
+      ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #555; }
+      .scrollbar-hide::-webkit-scrollbar { display: none; }
+      .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+    
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+        "framer-motion": "https://esm.sh/framer-motion@10.16.4?external=react,react-dom",
+        "lucide-react": "https://esm.sh/lucide-react@0.292.0?external=react"
+      }
+    }
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module" data-presets="react,typescript">
+        import React, { useState, useEffect } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { motion, AnimatePresence } from 'framer-motion';
+        import { 
+            Menu, X, Phone, ArrowRight, MapPin, Mail, 
+            Home, Armchair, Hammer, LayoutTemplate, Box, PenTool, 
+            Star, Clock, Award, MessageSquare, Key, 
+            Instagram, Linkedin, Play, RotateCcw 
+        } from 'lucide-react';
+
+        // Navbar Component
+        const Navbar = () => {
+            const [isOpen, setIsOpen] = useState(false);
+            const [scrolled, setScrolled] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => {
+                    setScrolled(window.scrollY > 50);
+                };
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const navLinks = [
+                { name: 'Services', href: '#services' },
+                { name: 'Portfolio', href: '#portfolio' },
+                { name: 'Process', href: '#process' },
+                { name: 'Founders', href: '#founders' },
+                { name: 'Contact', href: '#contact' },
+            ];
+
+            return (
+                <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-black/95 backdrop-blur-md border-b border-white/10' : 'bg-transparent'}`}>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between items-center h-20">
+                    <div className="flex-shrink-0 flex items-center">
+                        <a href="#" className="flex items-center gap-2">
+                        {/* UPDATED: Using sbinteriorlogo.png */}
+                        <div className="relative h-12 flex items-center">
+                             <img 
+                                src="sbinteriorlogo.png" 
+                                alt="SB INTERIORS" 
+                                className="h-full w-auto object-contain invert"
+                                onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                    e.currentTarget.nextSibling.style.display = 'block';
+                                }}
+                            />
+                            <span className="hidden text-xl md:text-2xl font-serif font-bold tracking-widest text-white whitespace-nowrap">
+                                SB INTERIORS
+                            </span>
+                        </div>
+                        </a>
+                    </div>
+                    
+                    <div className="hidden md:flex items-center space-x-8">
+                        {navLinks.map((link) => (
+                        <a
+                            key={link.name}
+                            href={link.href}
+                            className="text-xs uppercase tracking-widest text-gray-300 hover:text-white transition-colors duration-200"
+                        >
+                            {link.name}
+                        </a>
+                        ))}
+                        <a 
+                        href="tel:7207058862"
+                        className="flex items-center gap-2 bg-white text-black px-5 py-2 rounded-none hover:bg-gray-200 transition-colors text-xs font-bold tracking-wide uppercase"
+                        >
+                        <Phone size={14} />
+                        720-705-8862
+                        </a>
+                    </div>
+
+                    <div className="md:hidden flex items-center">
+                        <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="text-white hover:text-gray-300 focus:outline-none"
+                        >
+                        {isOpen ? <X size={28} /> : <Menu size={28} />}
+                        </button>
+                    </div>
+                    </div>
+                </div>
+
+                {isOpen && (
+                    <div className="md:hidden bg-black border-t border-white/10 absolute w-full">
+                    <div className="px-4 pt-4 pb-6 space-y-2">
+                        {navLinks.map((link) => (
+                        <a
+                            key={link.name}
+                            href={link.href}
+                            onClick={() => setIsOpen(false)}
+                            className="block px-3 py-3 text-base font-medium text-gray-300 hover:text-white hover:bg-white/10 uppercase tracking-widest"
+                        >
+                            {link.name}
+                        </a>
+                        ))}
+                        <div className="pt-4">
+                            <a 
+                            href="tel:7207058862"
+                            className="flex items-center justify-center gap-2 bg-white text-black px-4 py-4 w-full font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors"
+                            >
+                            <Phone size={18} />
+                            Call Us
+                            </a>
+                        </div>
+                    </div>
+                    </div>
+                )}
+                </nav>
+            );
+        };
+
+        // Helper for Motion
+        const MotionDiv = motion.div;
+        const MotionImg = motion.img;
+
+        // Hero Component
+        const Hero = () => {
+            return (
+                <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black text-white">
+                <div className="absolute inset-0 z-0 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black z-10"></div>
+                    <MotionImg 
+                    initial={{ scale: 1 }}
+                    animate={{ scale: 1.1 }}
+                    transition={{ duration: 20, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
+                    src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?q=80&w=1920&auto=format&fit=crop" 
+                    alt="Luxury Interior Background" 
+                    className="w-full h-full object-cover opacity-60"
+                    />
+                </div>
+
+                <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mt-10">
+                    <MotionDiv
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    >
+                    <h2 className="text-xs md:text-sm tracking-[0.4em] uppercase mb-6 text-orange-500 font-bold">
+                        Premium Interior Design Firm
+                    </h2>
+                    <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold mb-6 tracking-tighter font-serif text-white">
+                        SB INTERIORS
+                    </h1>
+                    <p className="text-lg md:text-2xl font-light italic text-gray-300 mb-12 max-w-3xl mx-auto py-4">
+                        "Transforming Badangepet's Homes into Luxurious Sanctuaries"
+                    </p>
+                    
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+                        <a 
+                        href="#contact" 
+                        className="w-full sm:w-auto px-10 py-4 bg-white text-black text-xs uppercase tracking-widest font-bold hover:bg-orange-500 hover:text-white transition-all flex items-center justify-center gap-2"
+                        >
+                        Get Free Consultation <ArrowRight size={16} />
+                        </a>
+                        <a 
+                        href="#portfolio" 
+                        className="w-full sm:w-auto px-10 py-4 border border-white text-white text-xs uppercase tracking-widest font-bold hover:bg-white hover:text-black transition-all"
+                        >
+                        View Projects
+                        </a>
+                    </div>
+                    </MotionDiv>
+                </div>
+                </section>
+            );
+        };
+
+        // Services Component
+        const services = [
+            { icon: Home, title: "Full Home Interiors", description: "Complete turnkey solutions from design to handover." },
+            { icon: Box, title: "Modular Kitchens", description: "German-finish modular kitchens with smart storage." },
+            { icon: LayoutTemplate, title: "Commercial Spaces", description: "Office & retail interiors that boost productivity." },
+            { icon: Hammer, title: "Civil Changes", description: "False ceiling, flooring, plumbing, and electrical works." },
+            { icon: PenTool, title: "3D Design", description: "Premium 3D rendering before we start work." },
+            { icon: Armchair, title: "Furniture & Decor", description: "Custom furniture manufacturing and styling." }
+        ];
+
+        const Services = () => {
+            return (
+                <section id="services" className="py-24 bg-white text-black">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-16">
+                    <span className="text-orange-600 font-bold text-xs tracking-widest uppercase block mb-2">What We Do</span>
+                    <h2 className="text-4xl md:text-5xl font-serif font-bold mb-4">Our Expertise</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {services.map((service, index) => (
+                        <MotionDiv
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1, duration: 0.5 }}
+                        viewport={{ once: true }}
+                        className="group p-10 border border-gray-100 hover:border-black transition-all duration-300 hover:shadow-2xl bg-white"
+                        >
+                        <div className="mb-6 bg-gray-50 w-16 h-16 flex items-center justify-center rounded-full group-hover:bg-black group-hover:text-white transition-colors duration-300">
+                            <service.icon strokeWidth={1.5} size={32} />
+                        </div>
+                        <h3 className="text-xl font-bold uppercase tracking-wide mb-3">{service.title}</h3>
+                        <p className="text-gray-500 font-light leading-relaxed">{service.description}</p>
+                        </MotionDiv>
+                    ))}
+                    </div>
+                </div>
+                </section>
+            );
+        };
+
+        // Portfolio Component with Video Support
+        const projects = [
+            { 
+                id: 1, 
+                category: 'Residential', 
+                title: 'Luxury Villa', 
+                src: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800',
+                video: 'https://player.vimeo.com/external/371842875.sd.mp4?s=d0107e600877908b89d44e785536412f91572c2c&profile_id=164&oauth2_token_id=57447761'
+            },
+            { 
+                id: 2, 
+                category: 'Kitchen', 
+                title: 'Modern Kitchen', 
+                src: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=800',
+                video: 'https://player.vimeo.com/external/451567156.sd.mp4?s=9506691456d354972a9df27376a94a287a95781a&profile_id=164&oauth2_token_id=57447761'
+            },
+            { 
+                id: 3, 
+                category: 'Commercial', 
+                title: 'Corporate Space', 
+                src: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800',
+                video: 'https://player.vimeo.com/external/371842875.sd.mp4?s=d0107e600877908b89d44e785536412f91572c2c&profile_id=164&oauth2_token_id=57447761'
+            },
+            { 
+                id: 4, 
+                category: 'Living', 
+                title: 'Minimalist Hall', 
+                src: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4f9d?auto=format&fit=crop&q=80&w=800',
+                video: 'https://player.vimeo.com/external/451567156.sd.mp4?s=9506691456d354972a9df27376a94a287a95781a&profile_id=164&oauth2_token_id=57447761'
+            },
+            { 
+                id: 5, 
+                category: 'Residential', 
+                title: 'Master Bedroom', 
+                src: 'https://images.unsplash.com/photo-1616594039964-40891a912a61?auto=format&fit=crop&q=80&w=800',
+                video: 'https://player.vimeo.com/external/371842875.sd.mp4?s=d0107e600877908b89d44e785536412f91572c2c&profile_id=164&oauth2_token_id=57447761'
+            },
+            { 
+                id: 6, 
+                category: 'Kitchen', 
+                title: 'Island Setup', 
+                src: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&q=80&w=800',
+                video: 'https://player.vimeo.com/external/451567156.sd.mp4?s=9506691456d354972a9df27376a94a287a95781a&profile_id=164&oauth2_token_id=57447761'
+            },
+        ];
+
+        const Portfolio = () => {
+            const [filter, setFilter] = useState('All');
+            const [flippedId, setFlippedId] = useState(null);
+
+            const categories = ['All', 'Residential', 'Kitchen', 'Commercial'];
+
+            const filteredProjects = filter === 'All' 
+                ? projects 
+                : projects.filter(p => p.category === filter);
+
+            const handleCardClick = (id) => {
+                setFlippedId(flippedId === id ? null : id);
+            };
+
+            return (
+                <section id="portfolio" className="py-24 bg-neutral-950 text-white relative">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-gray-800 pb-8">
+                    <div className="w-full md:w-auto">
+                        <span className="text-orange-500 font-bold text-xs tracking-widest uppercase block mb-2">Our Work</span>
+                        <h2 className="text-3xl md:text-5xl font-serif font-bold mb-2">Selected Projects</h2>
+                    </div>
+                    
+                    <div className="w-full md:w-auto mt-6 md:mt-0">
+                        <div className="flex gap-4 overflow-x-auto pb-4 md:pb-0 scrollbar-hide">
+                        {categories.map(cat => (
+                            <button
+                            key={cat}
+                            onClick={() => { setFilter(cat); setFlippedId(null); }}
+                            className={`text-xs md:text-sm uppercase tracking-widest px-4 py-2 transition-all whitespace-nowrap border ${
+                                filter === cat ? 'bg-white text-black border-white' : 'border-gray-800 text-gray-500 hover:border-gray-600'
+                            }`}
+                            >
+                            {cat}
+                            </button>
+                        ))}
+                        </div>
+                    </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredProjects.map((project) => (
+                        <div 
+                        key={project.id}
+                        className="group relative aspect-square [perspective:1000px] cursor-pointer"
+                        onClick={() => handleCardClick(project.id)}
+                        >
+                        <motion.div
+                            initial={false}
+                            animate={{ rotateY: flippedId === project.id ? 180 : 0 }}
+                            transition={{ duration: 0.6, ease: "easeInOut" }}
+                            className="w-full h-full relative [transform-style:preserve-3d]"
+                        >
+                            {/* Front Side (Image) */}
+                            <div className="absolute inset-0 w-full h-full [backface-visibility:hidden]">
+                                <img 
+                                    src={project.src} 
+                                    alt={project.title}
+                                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                                />
+                                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-500"></div>
+                                <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <h3 className="text-2xl font-serif mb-2">{project.title}</h3>
+                                    <span className="text-xs uppercase tracking-widest border border-white px-4 py-2">Click for Video</span>
+                                </div>
+                            </div>
+
+                            {/* Back Side (Video) */}
+                            <div className="absolute inset-0 w-full h-full bg-black [transform:rotateY(180deg)] [backface-visibility:hidden] flex items-center justify-center overflow-hidden border border-white/20">
+                                {flippedId === project.id && (
+                                    <>
+                                        <video 
+                                            src={project.video} 
+                                            autoPlay 
+                                            loop 
+                                            muted 
+                                            playsInline
+                                            className="w-full h-full object-cover"
+                                        />
+                                        <button 
+                                            onClick={(e) => { e.stopPropagation(); setFlippedId(null); }}
+                                            className="absolute top-4 right-4 bg-black/50 hover:bg-white hover:text-black text-white p-2 rounded-full backdrop-blur-sm transition-all z-10"
+                                        >
+                                            <RotateCcw size={20} />
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        </motion.div>
+                        </div>
+                    ))}
+                    </div>
+
+                    {/* Featured Case Study - UPDATED with casestudy.mp4 */}
+                    <div className="mt-24 bg-neutral-900 p-0 md:p-0 overflow-hidden border border-white/10">
+                    <div className="grid md:grid-cols-2">
+                        <div className="p-8 md:p-16 flex flex-col justify-center">
+                            <span className="text-xs font-bold text-orange-500 uppercase tracking-widest mb-4 block">Featured Case Study</span>
+                            <h3 className="text-3xl md:text-4xl font-serif text-white mb-6">Badangepet Luxury Residence</h3>
+                            <div className="space-y-8 text-gray-400 font-light">
+                                <div>
+                                <h4 className="text-white font-bold uppercase text-xs tracking-widest mb-2">The Challenge</h4>
+                                <p>Converting a compact 1200 sqft apartment into a spacious-feeling modern home with ample storage.</p>
+                                </div>
+                                <div>
+                                <h4 className="text-white font-bold uppercase text-xs tracking-widest mb-2">The Solution</h4>
+                                <p>We used hidden storage, reflective surfaces, and a minimal color palette with Italian marble to create a sense of grandeur.</p>
+                                </div>
+                                <div className="pt-4">
+                                    <a href="#contact" className="inline-block border-b border-orange-500 text-white pb-1 hover:text-orange-500 transition-colors">Request similar design</a>
+                                </div>
+                            </div>
+                        </div>
+                        {/* Video Section */}
+                        <div className="relative h-64 md:h-auto min-h-[400px] overflow-hidden group">
+                            <video 
+                                src="casestudy.mp4" 
+                                autoPlay 
+                                loop 
+                                muted 
+                                playsInline
+                                className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700 scale-105"
+                            />
+                            <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
+                            <div className="absolute bottom-6 right-6 bg-white text-black px-4 py-2 text-xs font-bold uppercase tracking-widest">
+                                Live Walkthrough
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </section>
+            );
+        };
+
+        // Founders Component - UPDATED with girlfounder.png and boyfounder.jpg
+        const Founders = () => {
+            return (
+                <section id="founders" className="py-24 bg-white text-black">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-16">
+                    <span className="text-orange-600 font-bold text-xs tracking-widest uppercase block mb-2">Leadership</span>
+                    <h2 className="text-3xl md:text-5xl font-serif font-bold mb-4">Meet The Founders</h2>
+                    <p className="text-gray-600 font-light max-w-2xl mx-auto">
+                        The creative and technical minds behind SBINTERIORS.
+                    </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
+                    {/* Founder 1 - Female Profile - girlfounder.png */}
+                    <MotionDiv 
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                        className="group"
+                    >
+                        <div className="w-full aspect-[3/4] mb-6 overflow-hidden relative">
+                        <MotionImg
+                            src="girlfounder.png"
+                            alt="S. Bhargavi Reddy"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
+                        />
+                         <div className="absolute bottom-0 left-0 bg-black text-white p-4 w-full translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                             <p className="text-xs">"Design is not just what it looks like, but how it works."</p>
+                         </div>
+                        </div>
+                        
+                        <div className="text-center">
+                        <h3 className="text-2xl font-serif font-bold mb-1">S. Bhargavi Reddy</h3>
+                        <p className="text-xs uppercase tracking-widest text-orange-600 font-bold mb-4">Co-Founder & Creative Head</p>
+                        <p className="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">
+                            Expert in spatial planning and aesthetics with 5+ years of experience in luxury residential projects.
+                        </p>
+                        </div>
+                    </MotionDiv>
+
+                    {/* Founder 2 - Male Profile - boyfounder.jpg */}
+                    <MotionDiv 
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, delay: 0.2 }}
+                        className="group"
+                    >
+                        <div className="w-full aspect-[3/4] mb-6 overflow-hidden relative">
+                        <MotionImg
+                            src="boyfounder.jpg"
+                            alt="B. Rajesh"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
+                        />
+                        <div className="absolute bottom-0 left-0 bg-black text-white p-4 w-full translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                             <p className="text-xs">"Execution is the key to bringing dreams to reality."</p>
+                         </div>
+                        </div>
+
+                        <div className="text-center">
+                        <h3 className="text-2xl font-serif font-bold mb-1">B. Rajesh</h3>
+                        <p className="text-xs uppercase tracking-widest text-orange-600 font-bold mb-4">Co-Founder & Project Lead</p>
+                        <p className="text-gray-500 text-sm leading-relaxed max-w-xs mx-auto">
+                            Specializes in on-site execution, material sourcing, and ensuring timely delivery of all projects.
+                        </p>
+                        </div>
+                    </MotionDiv>
+                    </div>
+                </div>
+                </section>
+            );
+        };
+
+        // Contact Component
+        const Contact = () => {
+            return (
+                <section id="contact" className="bg-black text-white pt-24 pb-6 overflow-hidden">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    
+                    <div className="grid lg:grid-cols-2 gap-16 mb-24">
+                    {/* Contact Info */}
+                    <MotionDiv 
+                        initial={{ opacity: 0, x: -50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <h2 className="text-4xl md:text-6xl font-serif font-bold mb-8">Start Your Journey</h2>
+                        <p className="text-gray-400 font-light mb-12 text-lg">
+                        Ready to transform your space? Get in touch for a free consultation and site visit in Hyderabad.
+                        </p>
+
+                        <div className="space-y-8">
+                            <div className="flex items-start gap-6">
+                                <div className="p-4 border border-white/20 text-orange-500">
+                                    <Phone size={24} />
+                                </div>
+                                <div>
+                                    <h4 className="text-sm font-bold uppercase tracking-widest mb-1 text-gray-500">Call Us</h4>
+                                    <p className="text-xl md:text-2xl font-serif">7207058862</p>
+                                </div>
+                            </div>
+                             <div className="flex items-start gap-6">
+                                <div className="p-4 border border-white/20 text-orange-500">
+                                    <Mail size={24} />
+                                </div>
+                                <div>
+                                    <h4 className="text-sm font-bold uppercase tracking-widest mb-1 text-gray-500">Email Us</h4>
+                                    <p className="text-xl md:text-2xl font-serif">sbinteriors159@gmail.com</p>
+                                </div>
+                            </div>
+                             <div className="flex items-start gap-6">
+                                <div className="p-4 border border-white/20 text-orange-500">
+                                    <MapPin size={24} />
+                                </div>
+                                <div>
+                                    <h4 className="text-sm font-bold uppercase tracking-widest mb-1 text-gray-500">Visit Us</h4>
+                                    <p className="text-lg">Badangepet, Hyderabad, Telangana</p>
+                                </div>
+                            </div>
+                        </div>
+                    </MotionDiv>
+
+                    {/* Form */}
+                    <MotionDiv 
+                        initial={{ opacity: 0, x: 50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                        className="bg-neutral-900 p-8 md:p-12 border-t-4 border-orange-600"
+                    >
+                        <form className="space-y-6">
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <div>
+                            <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Name</label>
+                            <input type="text" className="w-full bg-black border border-white/20 p-4 focus:border-orange-500 outline-none transition-colors text-white placeholder-gray-700" placeholder="John Doe" />
+                            </div>
+                            <div>
+                            <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Phone</label>
+                            <input type="tel" className="w-full bg-black border border-white/20 p-4 focus:border-orange-500 outline-none transition-colors text-white placeholder-gray-700" placeholder="+91 98765 43210" />
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Project Type</label>
+                            <select className="w-full bg-black border border-white/20 p-4 focus:border-orange-500 outline-none transition-colors text-white appearance-none">
+                            <option>Full Home Interior</option>
+                            <option>Modular Kitchen</option>
+                            <option>Commercial Renovation</option>
+                            <option>Other</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Message</label>
+                            <textarea rows={4} className="w-full bg-black border border-white/20 p-4 focus:border-orange-500 outline-none transition-colors text-white placeholder-gray-700" placeholder="Tell us about your requirements..."></textarea>
+                        </div>
+
+                        <motion.button 
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            type="submit" 
+                            className="w-full bg-white text-black font-bold uppercase tracking-widest py-4 hover:bg-orange-600 hover:text-white transition-colors"
+                        >
+                            Get Free Quote
+                        </motion.button>
+                        </form>
+                    </MotionDiv>
+                    </div>
+
+                    {/* Footer Bottom */}
+                    <div className="border-t border-white/10 pt-8 pb-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                    <div className="flex flex-col items-center md:items-start mb-4 md:mb-0">
+                        <span className="text-xl font-serif font-bold text-white mb-2">SB INTERIORS</span>
+                        <p>&copy; {new Date().getFullYear()} SB INTERIORS. All rights reserved.</p>
+                    </div>
+                    <div className="flex gap-6 mt-4 md:mt-0">
+                        <a href="#" className="hover:text-white transition-colors">Instagram</a>
+                        <a href="#" className="hover:text-white transition-colors">WhatsApp</a>
+                    </div>
+                    </div>
+
+                    {/* Brand Spark Credit Section */}
+                    <div className="border-t border-white/5 pt-4 flex flex-col items-center justify-center gap-2 pb-8">
+                        <p className="text-[10px] text-gray-600 tracking-widest uppercase font-medium">
+                            WEBSITE CREATED BY <span className="text-orange-500 font-bold">BRAND SPARK</span> • <a href="tel:7380311858" className="hover:text-gray-400 transition-colors">7380311858</a>
+                        </p>
+                        <div className="flex items-center gap-3 opacity-60 hover:opacity-100 transition-opacity">
+                            <a href="#" aria-label="Brand Spark Instagram" className="text-gray-500 hover:text-white transition-colors">
+                                <Instagram size={12} />
+                            </a>
+                            <a href="#" aria-label="Brand Spark LinkedIn" className="text-gray-500 hover:text-white transition-colors">
+                                <Linkedin size={12} />
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+                </section>
+            );
+        };
+
+        // App Component
+        const App = () => {
+            return (
+                <div className="min-h-screen bg-black overflow-x-hidden">
+                <Navbar />
+                <Hero />
+                <Services />
+                <Portfolio />
+                <Founders />
+                <Contact />
+                </div>
+            );
+        };
+
+        // Render
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+
+    </script>
+</body>
+</html>
