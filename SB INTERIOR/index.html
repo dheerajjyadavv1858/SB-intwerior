@@ -21,7 +21,7 @@
       /* Custom Scrollbar */
       ::-webkit-scrollbar { width: 8px; }
       ::-webkit-scrollbar-track { background: #000; }
-      ::-webkit-scrollbar-thumb { background: #ea580c; border-radius: 4px; } /* Orange Thumb */
+      ::-webkit-scrollbar-thumb { background: #ea580c; border-radius: 4px; }
       ::-webkit-scrollbar-thumb:hover { background: #c2410c; }
       .scrollbar-hide::-webkit-scrollbar { display: none; }
       .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
@@ -50,8 +50,7 @@
         import { 
             Menu, X, Phone, ArrowRight, MapPin, Mail, 
             Home, Armchair, Hammer, LayoutTemplate, Box, PenTool, 
-            Star, Clock, Award, MessageSquare, Key, 
-            Instagram, Linkedin, Play, RotateCcw, Quote
+            Star, Quote, Instagram, Linkedin, Play
         } from 'lucide-react';
 
         // Navbar Component
@@ -81,7 +80,6 @@
                     <div className="flex justify-between items-center h-20">
                     <div className="flex-shrink-0 flex items-center">
                         <a href="#" className="flex items-center gap-2">
-                        {/* Logo */}
                         <div className="relative h-12 flex items-center">
                              <img 
                                 src="sbinteriorlogo.png" 
@@ -158,7 +156,6 @@
             );
         };
 
-        // Helper for Motion
         const MotionDiv = motion.div;
         const MotionImg = motion.img;
 
@@ -257,65 +254,54 @@
             );
         };
 
-        // Portfolio Component
+        // Portfolio Component - UPDATED (Removed Video Click, Fixed Broken Image, Fixed Jitter)
         const Portfolio = () => {
             const projects = [
                 { 
                     id: 1, 
                     category: 'Residential', 
                     title: 'Luxury Villa', 
-                    src: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800',
-                    video: 'https://player.vimeo.com/external/371842875.sd.mp4?s=d0107e600877908b89d44e785536412f91572c2c&profile_id=164&oauth2_token_id=57447761'
+                    src: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800'
                 },
                 { 
                     id: 2, 
                     category: 'Kitchen', 
                     title: 'Modern Kitchen', 
-                    src: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=800',
-                    video: 'https://player.vimeo.com/external/451567156.sd.mp4?s=9506691456d354972a9df27376a94a287a95781a&profile_id=164&oauth2_token_id=57447761'
+                    src: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=800'
                 },
                 { 
                     id: 3, 
                     category: 'Commercial', 
                     title: 'Corporate Space', 
-                    src: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800',
-                    video: 'https://player.vimeo.com/external/371842875.sd.mp4?s=d0107e600877908b89d44e785536412f91572c2c&profile_id=164&oauth2_token_id=57447761'
+                    src: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800'
                 },
                 { 
                     id: 4, 
                     category: 'Living', 
                     title: 'Minimalist Hall', 
-                    src: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=800&auto=format&fit=crop',
-                    video: 'https://player.vimeo.com/external/451567156.sd.mp4?s=9506691456d354972a9df27376a94a287a95781a&profile_id=164&oauth2_token_id=57447761'
+                    src: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=800&auto=format&fit=crop'
                 },
                 { 
                     id: 5, 
                     category: 'Residential', 
                     title: 'Master Bedroom', 
-                    src: 'https://images.unsplash.com/photo-1616594039964-40891a912a61?q=80&w=800&auto=format&fit=crop',
-                    video: 'https://player.vimeo.com/external/371842875.sd.mp4?s=d0107e600877908b89d44e785536412f91572c2c&profile_id=164&oauth2_token_id=57447761'
+                    src: 'https://images.unsplash.com/photo-1617325247661-675ab4b64ae2?q=80&w=800&auto=format&fit=crop' // UPDATED LINK
                 },
                 { 
                     id: 6, 
                     category: 'Kitchen', 
                     title: 'Island Setup', 
-                    src: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&q=80&w=800',
-                    video: 'https://player.vimeo.com/external/451567156.sd.mp4?s=9506691456d354972a9df27376a94a287a95781a&profile_id=164&oauth2_token_id=57447761'
+                    src: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&q=80&w=800'
                 },
             ];
             
             const [filter, setFilter] = useState('All');
-            const [flippedId, setFlippedId] = useState(null);
 
             const categories = ['All', 'Residential', 'Kitchen', 'Commercial'];
 
             const filteredProjects = filter === 'All' 
                 ? projects 
                 : projects.filter(p => p.category === filter);
-
-            const handleCardClick = (id) => {
-                setFlippedId(flippedId === id ? null : id);
-            };
 
             return (
                 <section id="portfolio" className="py-24 bg-neutral-950 text-white relative">
@@ -331,7 +317,7 @@
                         {categories.map(cat => (
                             <button
                             key={cat}
-                            onClick={() => { setFilter(cat); setFlippedId(null); }}
+                            onClick={() => setFilter(cat)}
                             className={`text-xs md:text-sm uppercase tracking-widest px-4 py-2 transition-all whitespace-nowrap border ${
                                 filter === cat ? 'bg-orange-600 text-white border-orange-600' : 'border-gray-800 text-gray-500 hover:border-orange-500 hover:text-white'
                             }`}
@@ -343,58 +329,34 @@
                     </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredProjects.map((project) => (
-                        <div 
-                        key={project.id}
-                        className="group relative aspect-square [perspective:1000px] cursor-pointer"
-                        onClick={() => handleCardClick(project.id)}
-                        >
-                        <motion.div
-                            initial={false}
-                            animate={{ rotateY: flippedId === project.id ? 180 : 0 }}
-                            transition={{ duration: 0.6, ease: "easeInOut" }}
-                            className="w-full h-full relative [transform-style:preserve-3d]"
-                        >
-                            {/* Front Side (Image) */}
-                            <div className="absolute inset-0 w-full h-full [backface-visibility:hidden]">
-                                <img 
-                                    src={project.src} 
-                                    alt={project.title}
-                                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                                />
-                                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-500"></div>
-                                <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <h3 className="text-2xl font-serif mb-2">{project.title}</h3>
-                                    <span className="text-xs uppercase tracking-widest border border-white px-4 py-2 hover:bg-orange-600 hover:border-orange-600 hover:text-white transition-colors">Click for Video</span>
-                                </div>
+                    <motion.div 
+                        layout
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                    >
+                        <AnimatePresence>
+                        {filteredProjects.map((project) => (
+                            <motion.div 
+                            layout
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ duration: 0.3 }}
+                            key={project.id}
+                            className="group relative aspect-square overflow-hidden cursor-pointer"
+                            >
+                            <img 
+                                src={project.src} 
+                                alt={project.title}
+                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+                            />
+                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-4">
+                                <span className="text-orange-500 text-xs font-bold uppercase tracking-widest mb-2">{project.category}</span>
+                                <h3 className="text-2xl font-serif text-white mb-2">{project.title}</h3>
                             </div>
-
-                            {/* Back Side (Video) */}
-                            <div className="absolute inset-0 w-full h-full bg-black [transform:rotateY(180deg)] [backface-visibility:hidden] flex items-center justify-center overflow-hidden border border-white/20">
-                                {flippedId === project.id && (
-                                    <>
-                                        <video 
-                                            src={project.video} 
-                                            autoPlay 
-                                            loop 
-                                            muted 
-                                            playsInline
-                                            className="w-full h-full object-cover"
-                                        />
-                                        <button 
-                                            onClick={(e) => { e.stopPropagation(); setFlippedId(null); }}
-                                            className="absolute top-4 right-4 bg-black/50 hover:bg-orange-600 text-white p-2 rounded-full backdrop-blur-sm transition-all z-10"
-                                        >
-                                            <RotateCcw size={20} />
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                        </motion.div>
-                        </div>
-                    ))}
-                    </div>
+                            </motion.div>
+                        ))}
+                        </AnimatePresence>
+                    </motion.div>
 
                     {/* Featured Case Study */}
                     <div className="mt-24 bg-neutral-900 p-0 md:p-0 overflow-hidden border border-white/10">
