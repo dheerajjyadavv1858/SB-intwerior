@@ -56,7 +56,7 @@
             Menu, X, Phone, ArrowRight, MapPin, Mail, 
             Home, Armchair, Hammer, LayoutTemplate, Box, PenTool, 
             Star, Clock, Award, MessageSquare, Key, 
-            Instagram, Linkedin, Play, RotateCcw, ArrowLeft
+            Instagram, Linkedin, Play, RotateCcw, ArrowLeft, XCircle
         } from 'lucide-react';
 
         // Navbar Component
@@ -86,18 +86,19 @@
                     <div className="flex justify-between items-center h-20">
                     <div className="flex-shrink-0 flex items-center">
                         <a href="#" className="flex items-center gap-2">
-                        {/* UPDATED: Using sbinteriorlogo.png */}
-                        <div className="relative h-12 flex items-center">
+                        {/* Logo Container */}
+                        <div className="relative h-14 flex items-center bg-white px-2 py-1 rounded"> 
+                        {/* Added white background wrapper to ensure black logo is visible on black header */}
                              <img 
                                 src="sbinteriorlogo.png" 
                                 alt="SB INTERIORS" 
-                                className="h-full w-auto object-contain invert"
+                                className="h-full w-auto object-contain"
                                 onError={(e) => {
                                     e.currentTarget.style.display = 'none';
                                     e.currentTarget.nextSibling.style.display = 'block';
                                 }}
                             />
-                            <span className="hidden text-xl md:text-2xl font-serif font-bold tracking-widest text-white whitespace-nowrap">
+                            <span className="hidden text-xl md:text-2xl font-serif font-bold tracking-widest text-black whitespace-nowrap ml-2">
                                 SB INTERIORS
                             </span>
                         </div>
@@ -119,7 +120,7 @@
                         className="flex items-center gap-2 bg-white text-black px-5 py-2 rounded-none hover:bg-gray-200 transition-colors text-xs font-bold tracking-wide uppercase"
                         >
                         <Phone size={14} />
-                        720-705-8862
+                        <span className="font-sans">720-705-8862</span>
                         </a>
                     </div>
 
@@ -153,7 +154,7 @@
                             className="flex items-center justify-center gap-2 bg-white text-black px-4 py-4 w-full font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors"
                             >
                             <Phone size={18} />
-                            Call Us
+                            <span className="font-sans">Call Us</span>
                             </a>
                         </div>
                     </div>
@@ -299,9 +300,7 @@
                                         <h3 className="text-xl font-bold uppercase tracking-wide mb-3">{service.title}</h3>
                                         <p className="text-gray-500 font-light leading-relaxed">{service.description}</p>
                                     </div>
-                                    <div className="text-xs uppercase tracking-widest text-orange-600 font-bold flex items-center gap-2">
-                                        Click for details <ArrowRight size={12} />
-                                    </div>
+                                    {/* Removed 'Click for details' text as requested */}
                                 </div>
 
                                 {/* Back Face (Flipped) */}
@@ -332,65 +331,126 @@
             );
         };
 
-        // Portfolio Component with Video Support
+        // Portfolio Component with Gallery Modal Logic
         const projects = [
             { 
                 id: 1, 
                 category: 'Residential', 
                 title: 'Luxury Villa', 
                 src: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=800',
-                video: 'https://player.vimeo.com/external/371842875.sd.mp4?s=d0107e600877908b89d44e785536412f91572c2c&profile_id=164&oauth2_token_id=57447761'
+                gallery: [
+                    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80&w=1200',
+                    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200',
+                    'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&q=80&w=1200'
+                ]
             },
             { 
                 id: 2, 
                 category: 'Kitchen', 
                 title: 'Modern Kitchen', 
                 src: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=800',
-                video: 'https://player.vimeo.com/external/451567156.sd.mp4?s=9506691456d354972a9df27376a94a287a95781a&profile_id=164&oauth2_token_id=57447761'
+                gallery: [
+                    'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=1200',
+                    'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=1200',
+                    'https://images.unsplash.com/photo-1594911772841-8651a2d5930b?auto=format&fit=crop&q=80&w=1200'
+                ]
             },
             { 
                 id: 3, 
                 category: 'Commercial', 
                 title: 'Corporate Space', 
                 src: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800',
-                video: 'https://player.vimeo.com/external/371842875.sd.mp4?s=d0107e600877908b89d44e785536412f91572c2c&profile_id=164&oauth2_token_id=57447761'
+                gallery: [
+                    'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1200',
+                    'https://images.unsplash.com/photo-1497215842964-222b4bef97ed?auto=format&fit=crop&q=80&w=1200',
+                    'https://images.unsplash.com/photo-1504384764586-bb4cdc1707b0?auto=format&fit=crop&q=80&w=1200'
+                ]
             },
             { 
                 id: 4, 
                 category: 'Living', 
                 title: 'Minimalist Hall', 
                 src: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4f9d?auto=format&fit=crop&q=80&w=800',
-                video: 'https://player.vimeo.com/external/451567156.sd.mp4?s=9506691456d354972a9df27376a94a287a95781a&profile_id=164&oauth2_token_id=57447761'
+                gallery: [
+                    'https://images.unsplash.com/photo-1616486338812-3dadae4b4f9d?auto=format&fit=crop&q=80&w=1200',
+                    'https://images.unsplash.com/photo-1595856419777-622f9955745d?auto=format&fit=crop&q=80&w=1200',
+                    'https://images.unsplash.com/photo-1567016432779-094069958ea5?auto=format&fit=crop&q=80&w=1200'
+                ]
             },
             { 
                 id: 5, 
                 category: 'Residential', 
                 title: 'Master Bedroom', 
                 src: 'https://images.unsplash.com/photo-1616594039964-40891a912a61?auto=format&fit=crop&q=80&w=800',
-                video: 'https://player.vimeo.com/external/371842875.sd.mp4?s=d0107e600877908b89d44e785536412f91572c2c&profile_id=164&oauth2_token_id=57447761'
+                gallery: [
+                    'https://images.unsplash.com/photo-1616594039964-40891a912a61?auto=format&fit=crop&q=80&w=1200',
+                    'https://images.unsplash.com/photo-1560185127-6ed189bf02f4?auto=format&fit=crop&q=80&w=1200',
+                    'https://images.unsplash.com/photo-1522771753014-df70f1c270c4?auto=format&fit=crop&q=80&w=1200'
+                ]
             },
             { 
                 id: 6, 
                 category: 'Kitchen', 
                 title: 'Island Setup', 
                 src: 'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&q=80&w=800',
-                video: 'https://player.vimeo.com/external/451567156.sd.mp4?s=9506691456d354972a9df27376a94a287a95781a&profile_id=164&oauth2_token_id=57447761'
+                gallery: [
+                    'https://images.unsplash.com/photo-1565538810643-b5bdb714032a?auto=format&fit=crop&q=80&w=1200',
+                    'https://images.unsplash.com/photo-1484154218962-a1c00207099b?auto=format&fit=crop&q=80&w=1200',
+                    'https://images.unsplash.com/photo-1588854337221-4cf9fa96059c?auto=format&fit=crop&q=80&w=1200'
+                ]
             },
         ];
 
+        // Gallery Modal Component
+        const ProjectModal = ({ project, onClose }) => {
+            if (!project) return null;
+
+            return (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/95 p-4 backdrop-blur-md">
+                    <button 
+                        onClick={onClose}
+                        className="absolute top-6 right-6 text-white hover:text-orange-500 transition-colors z-[70]"
+                    >
+                        <XCircle size={48} strokeWidth={1} />
+                    </button>
+                    
+                    <div className="w-full max-w-6xl max-h-[90vh] overflow-y-auto scrollbar-hide">
+                        <div className="text-center mb-8">
+                            <span className="text-orange-500 text-xs font-bold uppercase tracking-widest">{project.category}</span>
+                            <h2 className="text-3xl md:text-5xl font-serif text-white mt-2">{project.title} Gallery</h2>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {project.gallery.map((img, idx) => (
+                                <motion.div 
+                                    key={idx}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: idx * 0.1 }}
+                                    className={`relative ${idx === 0 ? 'md:col-span-2 aspect-video' : 'aspect-square'}`}
+                                >
+                                    <img 
+                                        src={img} 
+                                        alt={`${project.title} detail ${idx + 1}`} 
+                                        className="w-full h-full object-cover rounded-sm border border-white/10"
+                                    />
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
         const Portfolio = () => {
             const [filter, setFilter] = useState('All');
-            const [flippedId, setFlippedId] = useState(null);
+            const [selectedProject, setSelectedProject] = useState(null);
 
             const categories = ['All', 'Residential', 'Kitchen', 'Commercial'];
 
             const filteredProjects = filter === 'All' 
                 ? projects 
                 : projects.filter(p => p.category === filter);
-
-            const handleCardClick = (id) => {
-                setFlippedId(flippedId === id ? null : id);
-            };
 
             return (
                 <section id="portfolio" className="py-24 bg-neutral-950 text-white relative">
@@ -406,7 +466,7 @@
                         {categories.map(cat => (
                             <button
                             key={cat}
-                            onClick={() => { setFilter(cat); setFlippedId(null); }}
+                            onClick={() => { setFilter(cat); }}
                             className={`text-xs md:text-sm uppercase tracking-widest px-4 py-2 transition-all whitespace-nowrap border ${
                                 filter === cat ? 'bg-white text-black border-white' : 'border-gray-800 text-gray-500 hover:border-gray-600'
                             }`}
@@ -420,54 +480,24 @@
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredProjects.map((project) => (
-                        <div 
+                        <motion.div 
                         key={project.id}
-                        className="group relative aspect-square [perspective:1000px] cursor-pointer"
-                        onClick={() => handleCardClick(project.id)}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        className="group relative aspect-square cursor-pointer overflow-hidden border border-white/10"
+                        onClick={() => setSelectedProject(project)}
                         >
-                        <motion.div
-                            initial={false}
-                            animate={{ rotateY: flippedId === project.id ? 180 : 0 }}
-                            transition={{ duration: 0.6, ease: "easeInOut" }}
-                            className="w-full h-full relative [transform-style:preserve-3d]"
-                        >
-                            {/* Front Side (Image) */}
-                            <div className="absolute inset-0 w-full h-full [backface-visibility:hidden]">
-                                <img 
-                                    src={project.src} 
-                                    alt={project.title}
-                                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                                />
-                                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-500"></div>
-                                <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <h3 className="text-2xl font-serif mb-2">{project.title}</h3>
-                                    <span className="text-xs uppercase tracking-widest border border-white px-4 py-2">Click for Video</span>
-                                </div>
-                            </div>
-
-                            {/* Back Side (Video) */}
-                            <div className="absolute inset-0 w-full h-full bg-black [transform:rotateY(180deg)] [backface-visibility:hidden] flex items-center justify-center overflow-hidden border border-white/20">
-                                {flippedId === project.id && (
-                                    <>
-                                        <video 
-                                            src={project.video} 
-                                            autoPlay 
-                                            loop 
-                                            muted 
-                                            playsInline
-                                            className="w-full h-full object-cover"
-                                        />
-                                        <button 
-                                            onClick={(e) => { e.stopPropagation(); setFlippedId(null); }}
-                                            className="absolute top-4 right-4 bg-black/50 hover:bg-white hover:text-black text-white p-2 rounded-full backdrop-blur-sm transition-all z-10"
-                                        >
-                                            <RotateCcw size={20} />
-                                        </button>
-                                    </>
-                                )}
+                            <img 
+                                src={project.src} 
+                                alt={project.title}
+                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-500"></div>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <h3 className="text-2xl font-serif mb-2">{project.title}</h3>
+                                <span className="text-xs uppercase tracking-widest border border-white px-4 py-2 hover:bg-white hover:text-black transition-colors">View Gallery</span>
                             </div>
                         </motion.div>
-                        </div>
                     ))}
                     </div>
 
@@ -509,6 +539,20 @@
                     </div>
                     </div>
                 </div>
+                
+                {/* Project Gallery Modal */}
+                <AnimatePresence>
+                    {selectedProject && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                        >
+                            <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
                 </section>
             );
         };
